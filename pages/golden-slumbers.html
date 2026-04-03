@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Golden Slumbers - GG</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1208;
+    font-family: 'EB Garamond', serif;
+    color: #e8d8a0;
+    overflow-x: hidden;
+  }
+
+  canvas#particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* warm vignette overlay */
+  .vignette {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(10,6,2,0.75) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  a.back {
+    position: fixed;
+    top: 18px; left: 18px;
+    background: rgba(0,0,0,0.55);
+    color: #e8d8a0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    z-index: 10;
+    font-family: 'EB Garamond', serif;
+    font-size: 1em;
+  }
+  a.back:hover { background: rgba(0,0,0,0.85); }
+
+  .section {
+    position: relative;
+    z-index: 2;
+    padding: 0 70px;
+  }
+
+  #header-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10vw;
+    font-weight: 600;
+    color: #f5e6b0;
+    line-height: 1;
+    margin: 130px 0 0 0;
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.1em;
+    color: #b89a50;
+    margin: 14px 0 90px 4px;
+    letter-spacing: 2px;
+  }
+
+  .memory-block {
+    max-width: 560px;
+    font-size: 1.5em;
+    line-height: 1.85;
+    color: #d4bf88;
+    font-style: italic;
+    margin-bottom: 110px;
+    padding-left: 20px;
+    border-left: 2px solid #8a6a20;
+  }
+
+  .cover-container {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .cover-image {
+    width: 360px;
+    max-width: 88vw;
+    border-radius: 6px;
+    box-shadow: 0 16px 60px rgba(0,0,0,0.8), 0 0 40px rgba(200,140,40,0.15);
+    display: block;
+    margin: 0 auto;
+  }
+
+  audio {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: 360px;
+    max-width: 88vw;
+    border-radius: 10px;
+    outline: none;
+  }
+
+  .closing {
+    text-align: right;
+    padding: 80px 0 160px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.8em;
+    color: #7a5a18;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="vignette"></div>
+<a href="../index.html" class="back">← Back</a>
+
+<div class="section">
+
+  <h1 id="header-text" data-aos="fade-right" data-aos-duration="1400">Golden Slumbers</h1>
+
+  <p class="subtitle" data-aos="fade-right" data-aos-duration="1200" data-aos-delay="200">The Beatles · Abbey Road, 1969</p>
+
+  <div class="memory-block" data-aos="fade-up" data-aos-duration="1400" data-aos-delay="100">
+    GG played this on the piano in her house, right next to the big wooden front door. I just stood there and listened. The whole room felt warm and still — like time slowed down just for that.
+  </div>
+
+  <div class="cover-container" data-aos="fade-up" data-aos-duration="1300">
+    <img class="cover-image" src="../images/golden-slumbers.jpg" alt="Abbey Road - The Beatles">
+    <audio controls autoplay loop>
+      <source src="../audios/golden-slumbers.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <div class="closing" data-aos="fade-left" data-aos-duration="1200">
+    — for GG
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ once: true });
+
+  /* Floating dust / candlelight motes */
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+
+  const motes = [];
+  const warmColors = [
+    'rgba(220,160,40,',
+    'rgba(200,130,30,',
+    'rgba(240,200,80,',
+    'rgba(180,100,20,'
+  ];
+
+  class Mote {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * H : H + 10;
+      this.r = Math.random() * 2 + 0.5;
+      this.speedY = -(Math.random() * 0.4 + 0.1);
+      this.speedX = (Math.random() - 0.5) * 0.15;
+      this.drift = Math.random() * Math.PI * 2;
+      this.driftSpeed = (Math.random() - 0.5) * 0.008;
+      this.opacity = Math.random() * 0.35 + 0.05;
+      this.color = warmColors[Math.floor(Math.random() * warmColors.length)];
+    }
+    update() {
+      this.drift += this.driftSpeed;
+      this.x += this.speedX + Math.sin(this.drift) * 0.25;
+      this.y += this.speedY;
+      if (this.y < -10) this.reset(false);
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + this.opacity + ')';
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 90; i++) motes.push(new Mote());
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    motes.forEach(m => { m.update(); m.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+</script>
+
+</body>
+</html>
