@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Blackbird - GG</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2c3e1a;
+    font-family: 'Lato', sans-serif;
+    color: #e8dfc8;
+    overflow-x: hidden;
+  }
+
+  canvas#particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  a.back {
+    position: fixed;
+    top: 18px; left: 18px;
+    background: rgba(0,0,0,0.5);
+    color: #e8dfc8;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    z-index: 10;
+    font-family: 'Lato', sans-serif;
+  }
+
+  a.back:hover { background: rgba(0,0,0,0.8); }
+
+  .section {
+    position: relative;
+    z-index: 2;
+    padding: 0 60px;
+  }
+
+  #header-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 11vw;
+    font-weight: 700;
+    color: #f5ecd4;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin: 120px 0 0 0;
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+  }
+
+  .subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95em;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #8a9a6a;
+    margin: 16px 0 80px 6px;
+    text-align: center;
+  }
+
+  .memory-block {
+    max-width: 600px;
+    border-left: 3px solid #8a9a4a;
+    padding: 20px 30px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 0 12px 12px 0;
+    font-size: 1.4em;
+    line-height: 1.8;
+    color: #d4c9a8;
+    margin-bottom: 100px;
+  }
+
+  .cover-container {
+    margin-bottom: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cover-image {
+    width: 380px;
+    max-width: 90vw;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    display: block;
+  }
+
+  audio {
+    display: block;
+    margin-top: 18px;
+    width: 380px;
+    max-width: 90vw;
+    border-radius: 10px;
+    outline: none;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<a href="../index.html" class="back">← Back</a>
+
+<div class="section">
+
+  <h1 id="header-text" data-aos="fade-right" data-aos-duration="1200">Blackbird</h1>
+  <p class="subtitle" data-aos="fade-right" data-aos-duration="1200" data-aos-delay="200">The Beatles · 1968</p>
+
+  <div class="memory-block" data-aos="fade-up" data-aos-duration="1200">
+    Driving by the Del Mar Polo Fields on a sunny Saturday. Going real slow, not even talking — just me and GG listening to this together. One of those moments where everything felt completely calm.
+  </div>
+
+  <div class="cover-container" data-aos="zoom-in" data-aos-duration="1200">
+    <img class="cover-image" src="../images/blackbird.jpg" alt="Blackbird - The Beatles">
+    <audio controls autoplay loop>
+      <source src="../audios/blackbird.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ once: true });
+
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+
+  const leaves = [];
+  const colors = ['rgba(138,154,74,', 'rgba(180,170,100,', 'rgba(100,120,60,'];
+
+  class Leaf {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * H : -20;
+      this.size = Math.random() * 5 + 3;
+      this.speedY = Math.random() * 0.6 + 0.2;
+      this.speedX = (Math.random() - 0.5) * 0.4;
+      this.angle = Math.random() * Math.PI * 2;
+      this.spin = (Math.random() - 0.5) * 0.02;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.opacity = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.y += this.speedY;
+      this.x += this.speedX + Math.sin(this.angle) * 0.3;
+      this.angle += this.spin;
+      if (this.y > H + 20) this.reset(false);
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, this.size, this.size * 1.8, 0, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + this.opacity + ')';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < 80; i++) leaves.push(new Leaf());
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    leaves.forEach(l => { l.update(); l.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+</script>
+
+</body>
+</html>
