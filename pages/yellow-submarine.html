@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Yellow Submarine - GG</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- AOS Library for scroll animations -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #ffeb3b;
+    font-family: 'Poppins', sans-serif;
+    color: #000;
+    overflow-x: hidden;
+  }
+
+  #header-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 8vw;
+    transform: rotate(-5deg);
+    margin: 60px 20px 20px 40px;
+    text-shadow: 3px 3px #aaa;
+  }
+
+  #tribute-text {
+    font-size: 2em;
+    max-width: 90%;
+    margin: 50px 0 50px 60px;
+    background: rgba(255,255,255,0.85);
+    padding: 25px;
+    border-radius: 15px;
+    font-weight: 600;
+  }
+
+  .cover-container {
+    margin: 80px 0 100px 50px;
+    text-align: left;
+  }
+
+  .cover-image {
+    width: 450px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  }
+
+  .audio-small {
+    margin-top: 20px;
+    width: 90%;
+    outline: none;
+    border-radius: 10px;
+  }
+
+  a.back {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../images/wave-pattern.png') repeat;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="back">← Back</a>
+
+<!-- Header slides in from left -->
+<h1 id="header-text" data-aos="fade-right" data-aos-duration="1000">Yellow Submarine</h1>
+
+<!-- Memory text fades in from bottom -->
+<div id="tribute-text" data-aos="fade-up" data-aos-duration="1200">
+  I remember being like 3‑6 years old, driving with GG on North Torrey Pines Road southbound.  
+  We’d always look out and see the super blue ocean, and she’d laugh while this song played.  
+  It was just us and the waves, and it felt like the whole world was happy.
+</div>
+
+<!-- Album cover zooms in -->
+<div class="cover-container" data-aos="zoom-in" data-aos-duration="1200">
+  <img class="cover-image" src="../images/yellow-submarine.jpg" alt="Yellow Submarine Album Cover">
+  <audio controls autoplay loop class="audio-small">
+      <source src="../audios/yellow-submarine.mp3" type="audio/mpeg">
+      Your browser doesn’t support the audio element.
+  </audio>
+</div>
+
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+
+</body>
+</html>
